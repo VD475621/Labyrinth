@@ -1,7 +1,8 @@
-enum TypeCell {WALL, START, FINISH, NONE};
+enum TypeCell {WALL, START, FINISH, WAY,NONE};
 
 class Cell {
   int _width, _height;
+  int finalCost, heuristicCost;
   TypeCell type = TypeCell.NONE;
 
   Cell left = null;
@@ -12,6 +13,8 @@ class Cell {
   Cell(int w, int h) {
     _width = w;
     _height = h;
+    finalCost = 0;
+    heuristicCost = 0;
   }
   void draw(int x, int y) {
     stroke(#303030);
@@ -21,6 +24,8 @@ class Cell {
       fill(#ff0000);
     else if(this.type == TypeCell.FINISH)
       fill(#0000ff);
+    else if(this.type == TypeCell.WAY)
+      fill(#00ff00);
     else
     fill(#ffffff);
     

@@ -4,6 +4,9 @@ class RdMaze {
   ArrayList _init;
   int _frame = 0;
   boolean _inProcess = false;
+  boolean _Finished = false;
+  boolean invH=true;
+  boolean invV=false;
   
   Grid _mainGrid;
   RdMaze(Grid grid){
@@ -63,7 +66,8 @@ class RdMaze {
       
       splits.add(leftGrid);
       splits.add(rightGrid);
-    } else {
+    }
+    else {
       int ywall = int(random(1, gridHeight-1));
       ywall = ywall % 2 == 0 ? ywall-1 : ywall; // wall should start at even position
       int xwall = 0;
@@ -102,6 +106,28 @@ class RdMaze {
   }
 
   ArrayList setHorizontalBorder(int x, int y, int w) {
+    ArrayList borderCells = new ArrayList(w);
+    for (int i = w-1; i >=0; i--) {
+      println("   brick at x="+(x+i)+", y="+y+";");
+      Cell cell = _mainGrid.getCell(x+i, y);
+      cell.type = TypeCell.WALL;
+      borderCells.add(cell);
+    }
+    return borderCells;
+  }
+  
+  ArrayList setVerticalBorderInv(int x, int y, int h) {
+    ArrayList borderCells = new ArrayList(h);
+    for (int i = h-1; i >=0; i--) {
+      println("   brick at x="+x+", y="+(y+i)+";");
+      Cell cell = _mainGrid.getCell(x, y+i);
+      cell.type = TypeCell.WALL;
+      borderCells.add(cell);
+    }
+    return borderCells;
+  }
+
+  ArrayList setHorizontalBorderInv(int x, int y, int w) {
     ArrayList borderCells = new ArrayList(w);
     for (int i = 0; i < w; i++) {
       println("   brick at x="+(x+i)+", y="+y+";");
@@ -149,16 +175,28 @@ class RdMaze {
       println("Generating maze...");
       generate(_init);
       println("Done.");
+      _Finished = true;
     }
+    
     if (_walls.size() > 0 || _wallBricks.size() > 0) {
       if (_frame % 2 == 0) { // Even frame - draw wall
         Wall wall = (Wall)_walls.remove(0);
         if (wall.type == 'h') {
-          _wallBricks = setHorizontalBorder(wall.x, wall.y, wall.size);
-        } else {
-          _wallBricks = setVerticalBorder(wall.x, wall.y, wall.size);
+          if(invH)
+              _wallBricks = setHorizontalBorder(wall.x, wall.y, wall.size);
+          else
+              _wallBricks = setHorizontalBorderInv(wall.x, wall.y, wall.size);
+          invH = !invH;
         }
-      } else { // Odd frame - draw gate
+        else {
+          if(invV)
+              _wallBricks = setVerticalBorder(wall.x, wall.y, wall.size);
+          else
+              _wallBricks = setVerticalBorderInv(wall.x, wall.y, wall.size);
+          invV = !invV;
+        }
+      } 
+      else { // Odd frame - draw gate
         setGate(_wallBricks);
         _wallBricks.clear();
       }
