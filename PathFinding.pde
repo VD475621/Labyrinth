@@ -9,6 +9,11 @@ class PathFinding{
       start = s;
       end = e;
       xcount=x; ycount = y;
+      for(int i=0; i<xcount;i++)
+        for(int j=0;j<ycount;j++){
+            if(cells[j][i].type == TypeCell.WAY)
+                cells[j][i].type = TypeCell.NONE;
+        }
       Evaluate();
     }
     
@@ -81,9 +86,10 @@ class PathFinding{
       start.g = 0;
       start.f = start.g + start.h;
       open.add(start);
-      Cell current = open.get(0);
+      Cell current;
       
       while(!open.isEmpty()){
+        current = open.get(0);
           for(Cell cell : open)
             if(current.f < cell.f)
               current = cell;
@@ -121,13 +127,13 @@ class PathFinding{
           if(cur.top.type != TypeCell.WALL)
             neighbor.add(cur.top);
             
-        if(cur.bottom != null)
-          if(cur.bottom.type != TypeCell.WALL)
-            neighbor.add(cur.bottom);
-            
-        if(cur.right != null)  
+        if(cur.right != null)
           if(cur.right.type != TypeCell.WALL)
             neighbor.add(cur.right);
+            
+        if(cur.bottom != null)  
+          if(cur.bottom.type != TypeCell.WALL)
+            neighbor.add(cur.bottom);
             
         if(cur.left != null)    
           if(cur.left.type != TypeCell.WALL)
@@ -138,6 +144,7 @@ class PathFinding{
     
     public void BuildPath(ArrayList<Cell> came_from, Cell end){
         for(Cell current : came_from)
+          if(current.type != TypeCell.START)
           current.type=TypeCell.WAY;
         //grid.draw();
     }

@@ -1,9 +1,9 @@
 //Generateur de labyrinthe
 //pathfinding A*, etc
 
-  int cellSize = 45;
-  int xcount = 25;
-  int ycount = 15;
+  int cellSize = 15;
+  int xcount = 55;
+  int ycount = 45;
   Grid rdMazeGrid1;
   int numberS = 1;
   RdMaze _rdMaze1;
