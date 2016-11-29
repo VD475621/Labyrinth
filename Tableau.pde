@@ -19,6 +19,8 @@ class Grid {
         if (j != 0) {
           currentCell.setLeft(_cells[i][j-1]);
         }
+        
+        
         if( i==0 && j==0)
           currentCell.type = TypeCell.START;
         if( i==_h-1 && j==_w-1)
@@ -55,4 +57,59 @@ class Grid {
   }
   int getWidth() {return _w;}
   int getHeight() {return _h;}
+  
+  void setStart(int x, int y){
+    Cell old = getStart();
+    if(old != null)
+      old.type = TypeCell.NONE;
+    int dx = _x;
+    int dy = _y;
+    for (int i = 0; i < _h; i++) {
+      dx = _x;
+      for (int j = 0; j < _w; j++) {
+        Cell cell = _cells[i][j];
+        if(x>=dx && x<=dx+_cellSize &&
+          y>=dy && y<=dy+_cellSize)
+          cell.type = TypeCell.START;
+        dx += _cellSize;
+      }
+      dy += _cellSize;
+    }
+    
+  }
+  
+  void setFinish(int x, int y){
+    Cell old = getFinish();
+    if(old != null)
+      old.type = TypeCell.NONE;
+    int dx = _x;
+    int dy = _y;
+    for (int i = 0; i < _h; i++) {
+      dx = _x;
+      for (int j = 0; j < _w; j++) {
+        Cell cell = _cells[i][j];
+        if(x>=dx && x<=dx+_cellSize &&
+          y>=dy && y<=dy+_cellSize)
+          cell.type = TypeCell.FINISH;
+        dx += _cellSize;
+      }
+      dy += _cellSize;
+    }
+  }
+  
+  Cell getStart(){
+    for(Cell currents[] : _cells)
+      for(Cell cur : currents)
+          if(cur.type == TypeCell.START)
+            return cur;
+    return null;
+  }
+  
+  Cell getFinish(){
+    for(Cell currents[] : _cells)
+      for(Cell cur : currents)
+          if(cur.type == TypeCell.FINISH)
+            return cur;
+    return null;
+  }
 }

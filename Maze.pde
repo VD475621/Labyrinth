@@ -9,6 +9,7 @@ class RdMaze {
   boolean invV=false;
   
   Grid _mainGrid;
+  
   RdMaze(Grid grid){
     _mainGrid = grid;
     _init = new ArrayList();
@@ -30,7 +31,8 @@ class RdMaze {
       if (isOk(grid)) {
         println("Splitting grid No "+(i+1)+": w="+grid.getWidth()+", h="+grid.getHeight()+";");
         generate(splitGrid(grid));
-      } else {
+      } 
+      else {
         println("Cannot process grid w="+grid.getWidth()+", h="+grid.getHeight()+"; further");
       }
     }
@@ -175,7 +177,6 @@ class RdMaze {
       println("Generating maze...");
       generate(_init);
       println("Done.");
-      _Finished = true;
     }
     
     if (_walls.size() > 0 || _wallBricks.size() > 0) {
@@ -200,6 +201,10 @@ class RdMaze {
         setGate(_wallBricks);
         _wallBricks.clear();
       }
+      
+      if(_walls.isEmpty())
+        _Finished = true;
+      
       _mainGrid.draw();
       _frame++;
     }

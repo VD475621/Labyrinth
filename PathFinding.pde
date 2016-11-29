@@ -1,29 +1,145 @@
 class PathFinding{
-    Grid grid;
+    Cell cells[][];
     Cell start, end;
     ArrayList<Cell> chemin = new ArrayList<Cell>();
+    int xcount, ycount;
     
-    PathFinding(Grid g, Cell s, Cell e){
-      this.grid = g;
+    PathFinding(Grid g, Cell s, Cell e, int x, int y){
+      cells = g.getCells();
       start = s;
       end = e;
+      xcount=x; ycount = y;
       Evaluate();
     }
     
     public void Evaluate(){
-    
+        double plus_x=0, plus_y=0;
+        int i=0,j=0;
+        for(int x=0; x<xcount;x++)
+          for(int y=0;y<ycount;y++)
+            if(cells[y][x].type == TypeCell.FINISH){
+              i=y;j=x;
+            }
+        
+        println(i + " " + j);
+        Cell onRight, onLeft;
+        Cell current = cells[i][j];//end
+        println(current.type);
+        
+        
+        while(current != null){
+             //audessus
+              onLeft = current.left;
+              while(current !=null){
+                  current.h = plus_x+plus_y;
+                  current = current.top;
+                  plus_y+=10;
+              }
+              
+              current = cells[i][j].bottom;//end
+              plus_y=10;
+              //endessous
+              while(current !=null){
+                  current.h = plus_x+plus_y;
+                  current = current.bottom;
+                  plus_y+=10;
+              }
+              current=onLeft;
+              plus_x+=10;
+        }
+        
+        plus_x=10;
+        plus_y=0;
+        current = cells[i][j].right;
+        while(current != null){
+             //audessus
+              onRight = current.right;
+              while(current !=null){
+                  current.h = plus_x+plus_y;
+                  current = current.top;
+                  plus_y+=10;
+              }
+              
+              current = cells[i][j].bottom;//end
+              plus_y=10;
+              //endessous
+              while(current !=null){
+                  current.h = plus_x+plus_y;
+                  current = current.bottom;
+                  plus_y+=10;
+              }
+              current=onRight;
+              plus_x+=10;
+        }
     }
     
-    public boolean Find(){
+    public boolean Astar(){
       ArrayList<Cell> open = new ArrayList<Cell>();
-      open.add(start);
       ArrayList<Cell> close = new ArrayList<Cell>();
+      ArrayList<Cell> came_from = new ArrayList<Cell>();
       
+      start.g = 0;
+      start.f = start.g + start.h;
+      open.add(start);
+      Cell current = open.get(0);
+      
+      while(!open.isEmpty()){
+          for(Cell cell : open)
+            if(current.f < cell.f)
+              current = cell;
+              
+          if(current.type == TypeCell.FINISH)
+          {
+              BuildPath(came_from, current);
+              return true;
+          }
+          
+          open.remove(current); //<>//
+          close.add(current);
+          
+          for(Cell neighbor : getNeighbor(current)){
+              if(close.contains(neighbor)){
+                 continue;
+              }
+              
+              double tentative_g_score = current.g + 10;
+              if(!open.contains(neighbor) || tentative_g_score < neighbor.g){
+                  came_from.add(current);
+                  neighbor.g = tentative_g_score;
+                  neighbor.f = neighbor.g + neighbor.h;
+                  if(!open.contains(neighbor))
+                     open.add(neighbor);
+              }
+          }
+      }
       return false;
     }
     
-    public void BuildPath(){
+    public ArrayList<Cell> getNeighbor(Cell cur){
+        ArrayList<Cell> neighbor = new ArrayList<Cell>();
+        if(cur.top != null)
+          if(cur.top.type != TypeCell.WALL)
+            neighbor.add(cur.top);
+            
+        if(cur.bottom != null)
+          if(cur.bottom.type != TypeCell.WALL)
+            neighbor.add(cur.bottom);
+            
+        if(cur.right != null)  
+          if(cur.right.type != TypeCell.WALL)
+            neighbor.add(cur.right);
+            
+        if(cur.left != null)    
+          if(cur.left.type != TypeCell.WALL)
+            neighbor.add(cur.left);
+        
+        return neighbor;
+    }
     
+    public void BuildPath(ArrayList<Cell> came_from, Cell end){
+        for(Cell current : came_from)
+          current.type=TypeCell.WAY;
+        //grid.draw();
     }
 
 }
