@@ -59,9 +59,6 @@ class Grid {
   int getHeight() {return _h;}
   
   void setStart(int x, int y){
-    Cell old = getStart();
-    if(old != null)
-      old.type = TypeCell.NONE;
     int dx = _x;
     int dy = _y;
     for (int i = 0; i < _h; i++) {
@@ -69,8 +66,12 @@ class Grid {
       for (int j = 0; j < _w; j++) {
         Cell cell = _cells[i][j];
         if(x>=dx && x<=dx+_cellSize &&
-          y>=dy && y<=dy+_cellSize)
+          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
+          Cell old = getStart();
+          if(old != null)
+            old.type = TypeCell.NONE;
           cell.type = TypeCell.START;
+        }
         dx += _cellSize;
       }
       dy += _cellSize;
@@ -79,9 +80,6 @@ class Grid {
   }
   
   void setFinish(int x, int y){
-    Cell old = getFinish();
-    if(old != null)
-      old.type = TypeCell.NONE;
     int dx = _x;
     int dy = _y;
     for (int i = 0; i < _h; i++) {
@@ -89,8 +87,13 @@ class Grid {
       for (int j = 0; j < _w; j++) {
         Cell cell = _cells[i][j];
         if(x>=dx && x<=dx+_cellSize &&
-          y>=dy && y<=dy+_cellSize)
+          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
+          Cell old = getFinish();
+          if(old != null)
+            old.type = TypeCell.NONE;
           cell.type = TypeCell.FINISH;
+        
+        }
         dx += _cellSize;
       }
       dy += _cellSize;

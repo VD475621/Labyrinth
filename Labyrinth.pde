@@ -1,9 +1,15 @@
 //Generateur de labyrinthe
 //pathfinding A*, etc
 
+  /*int cellSize = 45;
+  int xcount=15;
+  int ycount=11;
+  */
   int cellSize = 15;
-  int xcount = 55;
-  int ycount = 45;
+  int xcount=83;
+  int ycount=51;
+  
+  
   Grid rdMazeGrid1;
   int numberS = 1;
   RdMaze _rdMaze1;
@@ -11,18 +17,19 @@
 void setup(){
   frameRate(60);
   size(1280, 800);
-
+  
+    
   rdMazeGrid1 = new Grid(cellSize, xcount,ycount);
-  rdMazeGrid1.setX(12);
-  rdMazeGrid1.setY(12);
+  rdMazeGrid1.setX(cellSize);
+  rdMazeGrid1.setY(cellSize);
   _rdMaze1 = new RdMaze(rdMazeGrid1);
 }
 
 void keyPressed() {
   if (key == 'r') {
       rdMazeGrid1 = new Grid(cellSize, xcount,ycount);
-      rdMazeGrid1.setX(12);
-      rdMazeGrid1.setY(12);
+      rdMazeGrid1.setX(cellSize);
+      rdMazeGrid1.setY(cellSize);
       _rdMaze1 = new RdMaze(rdMazeGrid1);
       path=false;
   }
@@ -38,18 +45,34 @@ void keyPressed() {
       _rdMaze1._mainGrid.draw();
       path=false;
   }
-  if(key == 't'){
+  if(key == '1'){
       //searcsh path
       if(_rdMaze1._Finished && !path){
-          println("Start pathFinding");
+          println("Start pathFinding Astar");
           Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
-          println(s.type);
-          println(e.type);
-          path=true;
-          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
+          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
           p.Astar();
           _rdMaze1._mainGrid.draw();
           println("End pathFinding");
+      }
+  }
+  if(key == '2'){
+      //searcsh path
+      if(_rdMaze1._Finished && !path){
+          println("Start pathFinding Dijkstra");
+          Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
+          //PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
+          //p.Dijkstra();
+          _rdMaze1._mainGrid.draw();
+          println("End pathFinding");
+      }
+  }
+  if(key == '0'){
+      if(_rdMaze1._Finished && !path){
+          println("Init");
+          Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
+          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
+          _rdMaze1._mainGrid.draw();
       }
   }
   

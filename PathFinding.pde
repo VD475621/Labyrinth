@@ -14,7 +14,6 @@ class PathFinding{
             if(cells[j][i].type == TypeCell.WAY)
                 cells[j][i].type = TypeCell.NONE;
         }
-      Evaluate();
     }
     
     public void Evaluate(){
@@ -79,6 +78,7 @@ class PathFinding{
     }
     
     public boolean Astar(){
+      Evaluate();
       ArrayList<Cell> open = new ArrayList<Cell>();
       ArrayList<Cell> close = new ArrayList<Cell>();
       ArrayList<Cell> came_from = new ArrayList<Cell>();
@@ -142,10 +142,114 @@ class PathFinding{
         return neighbor;
     }
     
+    public void Dijkstra(){
+        ArrayStack array = new ArrayStack();
+        CellDijkstra cd[][] = new CellDijkstra[ycount][xcount];
+        for(int i=0;i<ycount;i++)
+            for(int j=0;j<xcount;j++)
+                cd[i][j]=new CellDijkstra();
+        
+        boolean flag=false;
+        int x=0, y=0;
+        for(int i=0;i<ycount;i++)
+            for(int j=0;j<xcount;j++)
+                if(cells[i][j].type == TypeCell.START){
+                    x = j;
+                    y = i;
+                }
+        Cell cur =start;
+        array.push(cur);
+        int state=0;
+        
+        println(" COUNT " + xcount + "   " + ycount);
+        
+        boolean change=false;
+         while(!flag){
+          //delay(500);
+          
+            if(cur.bottom!=null && !change && y-1>=0){
+              if(cur.bottom.type!=TypeCell.WALL && !cd[(int) y][(int) x].bottom){
+                cd[(int) y][(int) x].bottom = true;
+                cd[(int) y-1][(int) x].top = true;
+                array.push(cur.bottom);
+                cur = cur.bottom;println("go bottom");
+                y--;
+                state=0;
+                change=true;
+              }
+            }
+            if(cur.right!=null && !change && x+1<xcount){
+              if(cur.right.type!=TypeCell.WALL && !cd[(int) y][(int) x].right){
+                cd[(int) y][(int) x].right = true;
+                cd[(int) y][(int) x+1].left = true;
+                array.push(cur.right);
+                cur = cur.right;println("go right");
+                x++;
+                state=1;
+                change=true;
+              }
+            }
+            if(cur.top!=null && !change && y+1<ycount){
+              if(cur.top.type!=TypeCell.WALL && !cd[(int) y][(int) x].top ){
+                cd[(int) y][(int) x].top = true;
+                cd[(int) y+1][(int) x].bottom = true;
+                array.push(cur.top);
+                cur = cur.top;println("go top");
+                y++;
+                state=2;
+                change=true;
+              }
+            }
+            if(cur.left!=null && !change && x-1>=0){
+              if( cur.left.type!=TypeCell.WALL && !cd[(int) y][(int) x].left){
+                cd[(int) y][(int) x].left = true;
+                cd[(int) y][(int) x-1].right = true;
+                array.push(cur.left);
+                cur=cur.left;println("go left");
+                x--;
+                state=3;
+                change=true;
+              }
+            }
+            
+            
+            if(!change){
+                cur=array.pop();
+                if(state==0)
+                  y++;
+                else if(state==1)
+                  x--;
+                else if(state==2)
+                  y--;
+                else if(state==3)
+                  x++;
+            }
+            
+            change=false;
+            state=-1;
+            println(x + "  " + y);
+            if(cur.type==TypeCell.FINISH)
+              flag=true;
+        }
+      
+    }
+    
     public void BuildPath(ArrayList<Cell> came_from, Cell end){
-        for(Cell current : came_from)
-          if(current.type != TypeCell.START)
-          current.type=TypeCell.WAY;
+        ArrayList<Cell> path = new ArrayList<Cell>();
+        path.add(end);
+        Cell current;
+        current = came_from.get(came_from.size()-1);
+        while(current!=null){
+            path.add(current);
+            if(came_from.indexOf(current)-1>0)
+              current = came_from.get(came_from.indexOf(current)-1);
+            else
+              current=null;
+        }
+        
+        for(Cell cur : path)
+          if(cur.type != TypeCell.START && cur.type != TypeCell.FINISH)
+          cur.type=TypeCell.WAY;
         //grid.draw();
     }
 
