@@ -3,9 +3,11 @@ class PathFinding{
     Cell start, end;
     ArrayList<Cell> chemin = new ArrayList<Cell>();
     int xcount, ycount;
+    boolean find=false;
     
     PathFinding(Grid g, Cell s, Cell e, int x, int y){
       cells = g.getCells();
+      find=false;
       start = s;
       end = e;
       xcount=x; ycount = y;
@@ -14,6 +16,7 @@ class PathFinding{
             if(cells[j][i].type == TypeCell.WAY)
                 cells[j][i].type = TypeCell.NONE;
         }
+      Evaluate();
     }
     
     public void Evaluate(){
@@ -78,7 +81,7 @@ class PathFinding{
     }
     
     public boolean Astar(){
-      Evaluate();
+      
       ArrayList<Cell> open = new ArrayList<Cell>();
       ArrayList<Cell> close = new ArrayList<Cell>();
       ArrayList<Cell> came_from = new ArrayList<Cell>();
@@ -155,7 +158,7 @@ class PathFinding{
         for(Cell cur : path)
           if(cur.type != TypeCell.START && cur.type != TypeCell.FINISH)
           cur.type=TypeCell.WAY;
-        
+        find=true;
     }
 
 }

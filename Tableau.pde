@@ -9,6 +9,7 @@ class Grid {
     _cellSize = cellSize;
     _cells = new Cell[_h][_w];
     
+    
     for (int i = 0; i < _h; i++) {
       for (int j = 0; j < _w; j++) {
         Cell currentCell = new Cell(_cellSize, _cellSize);
@@ -21,10 +22,10 @@ class Grid {
         }
         
         
-        if( i==0 && j==0)
+        /*if( i==0 && j==0)
           currentCell.type = TypeCell.START;
         if( i==_h-1 && j==_w-1)
-          currentCell.type = TypeCell.FINISH;
+          currentCell.type = TypeCell.FINISH;*/
       }
     }
   }
@@ -98,6 +99,42 @@ class Grid {
       }
       dy += _cellSize;
     }
+  }
+  
+  void setStart(){
+    int dx = _x;
+    int dy = _y;
+    
+    boolean start_set=false;
+    while(!start_set){
+      int rx = int(random(xcount));
+      int ry = int(random(ycount));
+      Cell cell = _cells[ry][rx];
+      if(cell.type == TypeCell.NONE){
+        cell.type = TypeCell.START;
+        start_set=true;
+      }
+    }
+    
+    
+    
+  }
+  
+  void setFinish(){
+    int dx = _x;
+    int dy = _y;
+    boolean finish_set=false;
+    
+    while(!finish_set){
+      int rx = int(random(xcount));
+      int ry = int(random(ycount));
+      Cell cell = _cells[ry][rx];
+      if(cell.type == TypeCell.NONE){
+        cell.type = TypeCell.FINISH;
+        finish_set=true;
+      }
+    }
+    
   }
   
   Cell getStart(){

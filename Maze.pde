@@ -204,8 +204,9 @@ class RdMaze {
         _wallBricks.clear();
       }
       
-      if(_walls.isEmpty())
+      if(_walls.isEmpty()){
         _Finished = true;
+      }
       
       _mainGrid.draw();
       _frame++;

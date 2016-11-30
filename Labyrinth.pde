@@ -6,31 +6,31 @@
   int ycount=11;
   */
   
-  int cellSize = 15;
-  int xcount=83;
-  int ycount=51;
-  
+  int cellSize = 12;
+  int xcount=123;
+  int ycount=61;
+  int offsetx = 45;
+  int offsety = 65;
+  boolean demo=true;
   
   Grid rdMazeGrid1;
   int numberS = 1;
   RdMaze _rdMaze1;
+  PathFinding p;
+  boolean find =false;
 void setup(){
   frameRate(60);
-  size(1280, 800);
+  //size(1280, 800);
+  fullScreen();
   
-    
-  rdMazeGrid1 = new Grid(cellSize, xcount,ycount);
-  rdMazeGrid1.setX(cellSize);
-  rdMazeGrid1.setY(cellSize);
-  _rdMaze1 = new RdMaze(rdMazeGrid1);
+  initGrid();
+  Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
+  p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
 }
 
 void keyPressed() {
   if (key == 'r') {
-      rdMazeGrid1 = new Grid(cellSize, xcount,ycount);
-      rdMazeGrid1.setX(cellSize);
-      rdMazeGrid1.setY(cellSize);
-      _rdMaze1 = new RdMaze(rdMazeGrid1);
+      initGrid();
   }
   if(key == 'd' && mousePressed){
       //new start
@@ -46,8 +46,6 @@ void keyPressed() {
       //searcsh path
       if(_rdMaze1._Finished){
           println("Start pathFinding Astar");
-          Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
-          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
           p.Astar();
           _rdMaze1._mainGrid.draw();
           println("End pathFinding");
@@ -57,7 +55,7 @@ void keyPressed() {
       if(_rdMaze1._Finished){
           println("Init");
           Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
-          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
+          p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
           _rdMaze1._mainGrid.draw();
       }
   }
@@ -72,14 +70,42 @@ void keyPressed() {
   }
 }
 
-void draw(){
-    _rdMaze1.draw();
+void initGrid(){
+      rdMazeGrid1 = new Grid(cellSize, xcount,ycount);
+      rdMazeGrid1.setX(offsetx);
+      rdMazeGrid1.setY(offsety);
+      _rdMaze1 = new RdMaze(rdMazeGrid1);
+}
+
+void update(){
+  if(p.find){
+    delay(5000);
+    find=false;
+    initGrid();
+    Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
+    p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
+  }
+  if(demo){
     if(_rdMaze1._Finished){
-          println("Start pathFinding Astar");
-          Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
-          PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
-          p.Astar();
-          _rdMaze1._mainGrid.draw();
-          println("End pathFinding");
+       _rdMaze1._mainGrid.setStart();
+       _rdMaze1._mainGrid.setFinish();
+      find=true;
+      println("Start pathFinding Astar");
+      Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
+      p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
+      p.Astar();
+      _rdMaze1._mainGrid.draw();
+      println("End pathFinding");
     }
+  }
+    
+}
+
+void draw(){
+    update();
+    fill(#000000);
+    text("Vivien Dumont 2016", 50,50);
+    if(demo)
+        text("Mode demo", 250,50);
+    _rdMaze1.draw();
 }
