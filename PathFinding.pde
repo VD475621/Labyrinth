@@ -237,14 +237,12 @@ class PathFinding{
     public void BuildPath(ArrayList<Cell> came_from, Cell end){
         ArrayList<Cell> path = new ArrayList<Cell>();
         path.add(end);
-        Cell current;
-        current = came_from.get(came_from.size()-1);
-        while(current!=null){
-            path.add(current);
-            if(came_from.indexOf(current)-1>0)
-              current = came_from.get(came_from.indexOf(current)-1);
-            else
-              current=null;
+        int i=came_from.size()-1;
+        while(i>=0){
+            if(path.contains(came_from.get(i).bottom) || path.contains(came_from.get(i).left) || path.contains(came_from.get(i).top) || path.contains(came_from.get(i).right)){
+              path.add(came_from.get(i));
+            }
+            i--;
         }
         
         for(Cell cur : path)
