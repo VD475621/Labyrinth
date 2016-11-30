@@ -29,7 +29,7 @@ class Cell {
     else if(this.type == TypeCell.WAY)
       fill(#00ff00);
     else
-    fill(#ffffff);
+      fill(#ffffff);
     
     rect(x, y, _width, _height);
   }

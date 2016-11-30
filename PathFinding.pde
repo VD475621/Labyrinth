@@ -155,7 +155,7 @@ class PathFinding{
         for(Cell cur : path)
           if(cur.type != TypeCell.START && cur.type != TypeCell.FINISH)
           cur.type=TypeCell.WAY;
-        //grid.draw();
+        
     }
 
 }
