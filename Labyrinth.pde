@@ -56,17 +56,6 @@ void keyPressed() {
           println("End pathFinding");
       }
   }
-  if(key == '2'){
-      //searcsh path
-      if(_rdMaze1._Finished && !path){
-          println("Start pathFinding Dijkstra");
-          Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
-          //PathFinding p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount); 
-          //p.Dijkstra();
-          _rdMaze1._mainGrid.draw();
-          println("End pathFinding");
-      }
-  }
   if(key == '0'){
       if(_rdMaze1._Finished && !path){
           println("Init");

@@ -198,6 +198,8 @@ class RdMaze {
         }
       } 
       else { // Odd frame - draw gate
+        //if( (int(random(2))%3) == 1)
+        //  setGate(_wallBricks);
         setGate(_wallBricks);
         _wallBricks.clear();
       }
