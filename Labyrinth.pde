@@ -17,9 +17,8 @@
   int numberS = 1;
   RdMaze _rdMaze1;
   PathFinding p;
-  boolean find =false;
+  boolean find =true;
 void setup(){
-  frameRate(60);
   //size(1280, 800);
   fullScreen();
   
