@@ -19,7 +19,8 @@ class Cell {
   }
   
   void draw(int x, int y) {
-    stroke(#303030);
+    //stroke(#303030);
+    noStroke();
     if(this.type == TypeCell.WALL)
       fill(#303030);
     else if(this.type == TypeCell.START)
