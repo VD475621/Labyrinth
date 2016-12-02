@@ -97,7 +97,6 @@ void update(){
       println("End pathFinding");
     }
   }
-    
 }
 
 void draw(){
