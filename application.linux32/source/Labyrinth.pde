@@ -17,7 +17,7 @@
   int numberS = 1;
   RdMaze _rdMaze1;
   PathFinding p;
-  boolean find =true;
+  
 void setup(){
   //size(1280, 800);
   fullScreen();
@@ -67,6 +67,8 @@ void keyPressed() {
           numberS++;
       }
   }
+  if(key == 'a')
+    demo = !demo;
 }
 
 void initGrid(){
@@ -79,7 +81,6 @@ void initGrid(){
 void update(){
   if(p.find){
     delay(5000);
-    find=false;
     initGrid();
     Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
     p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
@@ -88,7 +89,6 @@ void update(){
     if(_rdMaze1._Finished){
        _rdMaze1._mainGrid.setStart();
        _rdMaze1._mainGrid.setFinish();
-      find=true;
       println("Start pathFinding Astar");
       Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
       p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
@@ -100,6 +100,11 @@ void update(){
 }
 
 void draw(){
+  background(255);
+  stroke(#303030);
+  fill(#ffffff);
+  rect(offsetx-1,offsety-1, xcount*cellSize+1, ycount*cellSize+1);
+  
     update();
     fill(#000000);
     text("Vivien Dumont 2016", 50,50);

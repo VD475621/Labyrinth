@@ -33,7 +33,7 @@ public class Labyrinth extends PApplet {
   int numberS = 1;
   RdMaze _rdMaze1;
   PathFinding p;
-  boolean find =true;
+  
 public void setup(){
   //size(1280, 800);
   
@@ -83,6 +83,8 @@ public void keyPressed() {
           numberS++;
       }
   }
+  if(key == 'a')
+    demo = !demo;
 }
 
 public void initGrid(){
@@ -95,7 +97,6 @@ public void initGrid(){
 public void update(){
   if(p.find){
     delay(5000);
-    find=false;
     initGrid();
     Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
     p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
@@ -104,7 +105,6 @@ public void update(){
     if(_rdMaze1._Finished){
        _rdMaze1._mainGrid.setStart();
        _rdMaze1._mainGrid.setFinish();
-      find=true;
       println("Start pathFinding Astar");
       Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
       p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
@@ -116,6 +116,11 @@ public void update(){
 }
 
 public void draw(){
+  background(255);
+  stroke(0xff303030);
+  fill(0xffffffff);
+  rect(offsetx-1,offsety-1, xcount*cellSize+1, ycount*cellSize+1);
+  
     update();
     fill(0xff000000);
     text("Vivien Dumont 2016", 50,50);
@@ -738,7 +743,7 @@ class Grid {
 }
   public void settings() {  fullScreen(); }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "--present", "--window-color=#666666", "--stop-color=#cccccc", "Labyrinth" };
+    String[] appletArgs = new String[] { "--present", "--window-color=#F6FF00", "--stop-color=#FF0000", "Labyrinth" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {
