@@ -22,8 +22,8 @@ public class Labyrinth extends PApplet {
   int ycount=11;
   */
   
-  int cellSize = 12;
-  int xcount=123;
+  int cellSize = 5;
+  int xcount=83;
   int ycount=61;
   int offsetx = 45;
   int offsety = 65;
@@ -37,6 +37,13 @@ public class Labyrinth extends PApplet {
 public void setup(){
   //size(1280, 800);
   
+  xcount = (int)((width/cellSize)*0.85f);
+  if(xcount%2 == 0)
+    xcount--;
+  
+  ycount = (int)((height/cellSize)*0.85f);
+  if(ycount%2 == 0)
+    ycount--;
   
   initGrid();
   Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
@@ -123,9 +130,10 @@ public void draw(){
   
     update();
     fill(0xff000000);
-    text("Vivien Dumont 2016", 50,50);
+    text("Vivien Dumont 2016", 150,50);
+    text("G\u00e9n\u00e9rateur de Maze par division, set du d\u00e9part et de l'arriv\u00e9e de mai\u00e8re randomr et pathfinding avec le A*", 325, 50);
     if(demo)
-        text("Mode demo", 250,50);
+        text("Mode demo", 50,50);
     _rdMaze1.draw();
 }
 enum TypeCell {WALL, START, FINISH, WAY, NONE};
@@ -134,7 +142,6 @@ class Cell {
   int _width, _height;
   double g,h,f;
   TypeCell type = TypeCell.NONE;
-
   Cell left = null;
   Cell right = null;
   Cell top = null;
@@ -152,11 +159,11 @@ class Cell {
     //stroke(#303030);
     noStroke();
     if(this.type == TypeCell.WALL)
-      fill(0xff303030);
+        fill(0xff303030);
     else if(this.type == TypeCell.START)
       fill(0xffff0000);
     else if(this.type == TypeCell.FINISH)
-      fill(0xff0000ff);
+      fill(0xff00ffe5);
     else if(this.type == TypeCell.WAY)
       fill(0xff00ff00);
     else
@@ -192,6 +199,160 @@ class Cell {
   public void setLeft(Cell cell) {
     left = cell;
     cell.right = this;
+  }
+}
+class Grid {
+  Cell[][] _cells;
+  int _x, _y, _w, _h, _cellSize;
+  Grid(int cellSize, int xcount, int ycount) {
+    _x = 0;
+    _y = 0;
+    _w = xcount;
+    _h = ycount;
+    _cellSize = cellSize;
+    _cells = new Cell[_h][_w];
+    
+    
+    for (int i = 0; i < _h; i++) {
+      for (int j = 0; j < _w; j++) {
+        Cell currentCell = new Cell(_cellSize, _cellSize);
+        _cells[i][j] = currentCell;
+        if (i != 0) {
+          currentCell.setBottom(_cells[i-1][j]);
+        }
+        if (j != 0) {
+          currentCell.setLeft(_cells[i][j-1]);
+        }
+        
+        /*if( i==0 && j==0)
+          currentCell.type = TypeCell.START;
+        if( i==_h-1 && j==_w-1)
+          currentCell.type = TypeCell.FINISH;*/
+      }
+    }
+  }
+  public void setX(int x) {_x = x;}
+  public int getX() {return _x;}
+  
+  public void setY(int y) {_y = y;}
+  public int getY(){return _y;}
+  
+  public int getCellSize(){return _cellSize;}
+  
+  public void draw(){
+    int dx = _x;
+    int dy = _y;
+    for (int i = 0; i < _h; i++) {
+      dx = _x;
+      for (int j = 0; j < _w; j++) {
+        Cell cell = _cells[i][j];
+        cell.draw(dx, dy);
+        dx += _cellSize;
+      }
+      dy += _cellSize;
+    }
+  }
+  
+  
+  public Cell[][] getCells() {return _cells;}
+  public Cell getCell(int x, int y) {
+      return _cells[y][x];
+  }
+  public int getWidth() {return _w;}
+  public int getHeight() {return _h;}
+  
+  public void setStart(int x, int y){
+    int dx = _x;
+    int dy = _y;
+    for (int i = 0; i < _h; i++) {
+      dx = _x;
+      for (int j = 0; j < _w; j++) {
+        Cell cell = _cells[i][j];
+        if(x>=dx && x<=dx+_cellSize &&
+          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
+          Cell old = getStart();
+          if(old != null)
+            old.type = TypeCell.NONE;
+          cell.type = TypeCell.START;
+        }
+        dx += _cellSize;
+      }
+      dy += _cellSize;
+    }
+    
+  }
+  
+  public void setFinish(int x, int y){
+    int dx = _x;
+    int dy = _y;
+    for (int i = 0; i < _h; i++) {
+      dx = _x;
+      for (int j = 0; j < _w; j++) {
+        Cell cell = _cells[i][j];
+        if(x>=dx && x<=dx+_cellSize &&
+          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
+          Cell old = getFinish();
+          if(old != null)
+            old.type = TypeCell.NONE;
+          cell.type = TypeCell.FINISH;
+        
+        }
+        dx += _cellSize;
+      }
+      dy += _cellSize;
+    }
+  }
+  
+  public void setStart(){
+    int dx = _x;
+    int dy = _y;
+    
+    boolean start_set=false;
+    while(!start_set){
+      int rx = PApplet.parseInt(random(xcount));
+      int ry = PApplet.parseInt(random(ycount));
+      Cell cell = _cells[ry][rx];
+      if(cell.type == TypeCell.NONE){
+        cell.type = TypeCell.START;
+        start_set=true;
+      }
+    }
+    
+    
+    
+  }
+  
+  public void setFinish(){
+    int dx = _x;
+    int dy = _y;
+    boolean finish_set=false;
+    
+    while(!finish_set){
+      int rx = PApplet.parseInt(random(xcount));
+      int ry = PApplet.parseInt(random(ycount));
+      Cell cell = _cells[ry][rx];
+      if(cell.type == TypeCell.NONE){
+        cell.type = TypeCell.FINISH;
+        finish_set=true;
+      }
+    }
+    
+  }
+  
+  public Cell getStart(){
+    for(Cell currents[] : _cells)
+      for(Cell cur : currents)
+          if(cur.type == TypeCell.START)
+            return cur;
+    return null;
+  }
+  
+  public Cell getFinish(){
+    for(Cell currents[] : _cells)
+      for(Cell cur : currents)
+          if(cur.type == TypeCell.FINISH)
+            return cur;
+    return null;
   }
 }
 class RdMaze {
@@ -410,18 +571,6 @@ class RdMaze {
   }
 
 }
-class Wall {
-  int x;
-  int y;
-  int size;
-  char type;
-  Wall(int x, int y, int size, char type) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.type = type;
-  }
-}
 class PathFinding{
     Cell cells[][];
     Cell start, end;
@@ -586,159 +735,16 @@ class PathFinding{
     }
 
 }
-class Grid {
-  Cell[][] _cells;
-  int _x, _y, _w, _h, _cellSize;
-  Grid(int cellSize, int xcount, int ycount) {
-    _x = 0;
-    _y = 0;
-    _w = xcount;
-    _h = ycount;
-    _cellSize = cellSize;
-    _cells = new Cell[_h][_w];
-    
-    
-    for (int i = 0; i < _h; i++) {
-      for (int j = 0; j < _w; j++) {
-        Cell currentCell = new Cell(_cellSize, _cellSize);
-        _cells[i][j] = currentCell;
-        if (i != 0) {
-          currentCell.setBottom(_cells[i-1][j]);
-        }
-        if (j != 0) {
-          currentCell.setLeft(_cells[i][j-1]);
-        }
-        
-        
-        /*if( i==0 && j==0)
-          currentCell.type = TypeCell.START;
-        if( i==_h-1 && j==_w-1)
-          currentCell.type = TypeCell.FINISH;*/
-      }
-    }
-  }
-  public void setX(int x) {_x = x;}
-  public int getX() {return _x;}
-  
-  public void setY(int y) {_y = y;}
-  public int getY(){return _y;}
-  
-  public int getCellSize(){return _cellSize;}
-  
-  public void draw(){
-    int dx = _x;
-    int dy = _y;
-    for (int i = 0; i < _h; i++) {
-      dx = _x;
-      for (int j = 0; j < _w; j++) {
-        Cell cell = _cells[i][j];
-        cell.draw(dx, dy);
-        dx += _cellSize;
-      }
-      dy += _cellSize;
-    }
-  }
-  
-  
-  public Cell[][] getCells() {return _cells;}
-  public Cell getCell(int x, int y) {
-      return _cells[y][x];
-  }
-  public int getWidth() {return _w;}
-  public int getHeight() {return _h;}
-  
-  public void setStart(int x, int y){
-    int dx = _x;
-    int dy = _y;
-    for (int i = 0; i < _h; i++) {
-      dx = _x;
-      for (int j = 0; j < _w; j++) {
-        Cell cell = _cells[i][j];
-        if(x>=dx && x<=dx+_cellSize &&
-          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
-          Cell old = getStart();
-          if(old != null)
-            old.type = TypeCell.NONE;
-          cell.type = TypeCell.START;
-        }
-        dx += _cellSize;
-      }
-      dy += _cellSize;
-    }
-    
-  }
-  
-  public void setFinish(int x, int y){
-    int dx = _x;
-    int dy = _y;
-    for (int i = 0; i < _h; i++) {
-      dx = _x;
-      for (int j = 0; j < _w; j++) {
-        Cell cell = _cells[i][j];
-        if(x>=dx && x<=dx+_cellSize &&
-          y>=dy && y<=dy+_cellSize && cell.type == TypeCell.NONE){
-          Cell old = getFinish();
-          if(old != null)
-            old.type = TypeCell.NONE;
-          cell.type = TypeCell.FINISH;
-        
-        }
-        dx += _cellSize;
-      }
-      dy += _cellSize;
-    }
-  }
-  
-  public void setStart(){
-    int dx = _x;
-    int dy = _y;
-    
-    boolean start_set=false;
-    while(!start_set){
-      int rx = PApplet.parseInt(random(xcount));
-      int ry = PApplet.parseInt(random(ycount));
-      Cell cell = _cells[ry][rx];
-      if(cell.type == TypeCell.NONE){
-        cell.type = TypeCell.START;
-        start_set=true;
-      }
-    }
-    
-    
-    
-  }
-  
-  public void setFinish(){
-    int dx = _x;
-    int dy = _y;
-    boolean finish_set=false;
-    
-    while(!finish_set){
-      int rx = PApplet.parseInt(random(xcount));
-      int ry = PApplet.parseInt(random(ycount));
-      Cell cell = _cells[ry][rx];
-      if(cell.type == TypeCell.NONE){
-        cell.type = TypeCell.FINISH;
-        finish_set=true;
-      }
-    }
-    
-  }
-  
-  public Cell getStart(){
-    for(Cell currents[] : _cells)
-      for(Cell cur : currents)
-          if(cur.type == TypeCell.START)
-            return cur;
-    return null;
-  }
-  
-  public Cell getFinish(){
-    for(Cell currents[] : _cells)
-      for(Cell cur : currents)
-          if(cur.type == TypeCell.FINISH)
-            return cur;
-    return null;
+class Wall {
+  int x;
+  int y;
+  int size;
+  char type;
+  Wall(int x, int y, int size, char type) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.type = type;
   }
 }
   public void settings() {  fullScreen(); }

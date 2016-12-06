@@ -21,7 +21,6 @@ class Grid {
           currentCell.setLeft(_cells[i][j-1]);
         }
         
-        
         /*if( i==0 && j==0)
           currentCell.type = TypeCell.START;
         if( i==_h-1 && j==_w-1)

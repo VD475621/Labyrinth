@@ -20,13 +20,12 @@ class Cell {
   void draw(int x, int y) {
     //stroke(#303030);
     noStroke();
-    if(this.type == TypeCell.WALL){
+    if(this.type == TypeCell.WALL)
         fill(#303030);
-    }
     else if(this.type == TypeCell.START)
       fill(#ff0000);
     else if(this.type == TypeCell.FINISH)
-      fill(#0000ff);
+      fill(#00ffe5);
     else if(this.type == TypeCell.WAY)
       fill(#00ff00);
     else

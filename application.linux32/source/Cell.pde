@@ -4,7 +4,6 @@ class Cell {
   int _width, _height;
   double g,h,f;
   TypeCell type = TypeCell.NONE;
-
   Cell left = null;
   Cell right = null;
   Cell top = null;
@@ -22,11 +21,11 @@ class Cell {
     //stroke(#303030);
     noStroke();
     if(this.type == TypeCell.WALL)
-      fill(#303030);
+        fill(#303030);
     else if(this.type == TypeCell.START)
       fill(#ff0000);
     else if(this.type == TypeCell.FINISH)
-      fill(#0000ff);
+      fill(#00ffe5);
     else if(this.type == TypeCell.WAY)
       fill(#00ff00);
     else
