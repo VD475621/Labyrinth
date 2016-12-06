@@ -6,11 +6,11 @@
   int ycount=11;
   */
   
-  int cellSize = 5;
+  int cellSize = 13;
   int xcount=83;
   int ycount=61;
-  int offsetx = 45;
-  int offsety = 65;
+  int offsetx = 50;
+  int offsety = 100;
   boolean demo=true;
   
   Grid rdMazeGrid1;
@@ -21,7 +21,8 @@
 void setup(){
   //size(1280, 800);
   fullScreen();
-  xcount = (int)((width/cellSize)*0.85);
+  cellSize = ((width / height)*10) + 3;
+  xcount = (int)((width/cellSize)*0.95);
   if(xcount%2 == 0)
     xcount--;
   
@@ -116,6 +117,7 @@ void draw(){
     fill(#000000);
     text("Vivien Dumont 2016", 150,50);
     text("Générateur de Maze par division, set du départ et de l'arrivée de maière randomr et pathfinding avec le A*", 325, 50);
+    text("Xcount : " + xcount + ", Ycount : " + ycount + ", CellSize : " + cellSize, 150, 75);
     if(demo)
         text("Mode demo", 50,50);
     _rdMaze1.draw();
