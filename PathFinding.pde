@@ -86,7 +86,6 @@ class PathFinding{
       ArrayList<Cell> close = new ArrayList<Cell>();
       ArrayList<Cell> came_from = new ArrayList<Cell>();
       
-      start.g = 0;
       start.f = start.g + start.h;
       open.add(start);
       Cell current;

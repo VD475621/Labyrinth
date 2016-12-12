@@ -2,13 +2,18 @@
 //pathfinding A*, etc
 
   /*int cellSize = 45;
-  int xcount=15;
-  int ycount=11;
+  int xcount=15; 63
+  int ycount=11; 43
   */
   
-  int cellSize = 13;
-  int xcount=83;
-  int ycount=61;
+  int cellSize = 40;
+  int xcount=13;
+  int ycount=11;
+  
+  int maxX;
+  int maxY;
+  int maxSize;
+  
   int offsetx = 50;
   int offsety = 100;
   boolean demo=true;
@@ -21,14 +26,14 @@
 void setup(){
   //size(1280, 800);
   fullScreen();
-  cellSize = ((width / height)*10) + 3;
-  xcount = (int)((width/cellSize)*0.95);
-  if(xcount%2 == 0)
-    xcount--;
+  maxSize = ((width / height)*10) + 3;
+  maxX = (int)((width/maxSize)*0.95);
+  if(maxX%2 == 0)
+    maxX--;
   
-  ycount = (int)((height/cellSize)*0.85);
-  if(ycount%2 == 0)
-    ycount--;
+  maxY = (int)((height/maxSize)*0.85);
+  if(maxY%2 == 0)
+    maxY--;
   
   initGrid();
   Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
@@ -89,6 +94,16 @@ void initGrid(){
 void update(){
   if(p.find){
     delay(5000);
+    xcount+=6;
+    if(xcount>=maxX)
+      xcount=maxX;
+    ycount+=4;
+    if(ycount>=maxY)
+      ycount=maxY;
+    cellSize-=5;
+    if(cellSize<=maxSize)
+      cellSize=maxSize;
+    
     initGrid();
     Cell s = _rdMaze1._mainGrid.getStart(), e = _rdMaze1._mainGrid.getFinish();
     p = new PathFinding(_rdMaze1._mainGrid, s, e, xcount, ycount);
@@ -104,6 +119,9 @@ void update(){
       _rdMaze1._mainGrid.draw();
       println("End pathFinding");
     }
+  }
+  else{
+    _rdMaze1._mainGrid.draw();
   }
 }
 
